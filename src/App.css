@@ -1,0 +1,10 @@
+body {
+    background-color: #121212;
+    color: #E0E0E0;
+}
+
+.btn-shadow {
+    border-radius: 50px;
+    background: linear-gradient(145deg, #101010, #131313);
+    box-shadow: 25px 25px 50px #0c0c0c,
+}
