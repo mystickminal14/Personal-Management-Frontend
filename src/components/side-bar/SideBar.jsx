@@ -32,7 +32,7 @@ export default function SideBar() {
 
   return (
     <aside
-    style={{background:'#1A1A1A' }}
+    style={{background:'#1A1A1A' ,zIndex:'1000'}}
       className={`fixed left-0 h-screen transition-all ease-in-out ${
         show ? "w-72 p-2" : "w-12 p-0"
       } flex flex-col`}
