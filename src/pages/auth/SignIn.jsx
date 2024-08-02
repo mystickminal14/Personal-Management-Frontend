@@ -13,7 +13,7 @@ const SignIn = () => {
     password: "",
   });
   const url = "/login";
-  const { loading, save } = useLogin(url, data);
+  const { isLoading, save } = useLogin(url, data);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -86,7 +86,7 @@ const SignIn = () => {
             type="submit"
             className="w-full self-center md:w-28"
             variant="contained"
-            disabled={loading}
+            disabled={isLoading}
           >
             Sign In
           </Button>

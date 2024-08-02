@@ -21,17 +21,16 @@ const SignUp = () => {
   const [show, setShow] = useState(false);
 
   const data = {
-    fullName: {},
+    fullName: '',
     birthDate: dayjs(),
     gender: "",
     username: "",
     email: "",
     password: "",
-    avatar: "",
+    avatar: null,
   };
 
-  const { post } = usePost("/register");
-
+  const { post,setPath } = usePost("/register");
   const handleSubmit = async (values) => {
     const formattedValues = {
       ...values,
@@ -39,6 +38,7 @@ const SignUp = () => {
       avatar: values.avatar ? values.avatar : "",
     };
     await post(formattedValues);
+    setPath(`/`)
   };
 
   const formik = useFormik({
@@ -48,8 +48,8 @@ const SignUp = () => {
   });
 
   return (
-    <div className="background flex justify-center text-black bg-slate-800 items-center h-screen">
-      <div className="bg-sign-up max-w-xl w-[90%] justify-start bg-white flex flex-col gap-5 rounded-lg shadow-lg p-5">
+    <div className="background flex justify-center text-black bg-slate-800 items-center h-full sm:h-screen">
+      <div className="bg-sign-up max-w-xl w-[90%] h-auto justify-start bg-white flex flex-col gap-5 rounded-lg shadow-lg p-5">
         <div className="flex justify-center flex-col items-center p-4">
           <h1 className="text-blue-900 text-3xl font-bold w-full p-3 rounded-b-lg text-center">
             Sign Up
@@ -66,6 +66,7 @@ const SignUp = () => {
               onBlur={formik.handleBlur}
               value={formik.values.fullName}
               label="Full Name"
+              autoComplete="fullName"
               error={formik.touched.fullName && Boolean(formik.errors.fullName)}
               helpertext={formik.touched.fullName && formik.errors.fullName}
             />
@@ -104,6 +105,7 @@ const SignUp = () => {
                 value={formik.values.gender}
                 label="Gender"
                 error={formik.touched.gender && Boolean(formik.errors.gender)}
+                autoComplete="gender"
               >
                 <MenuItem value="">
                   <em>Select Gender</em>
@@ -129,6 +131,7 @@ const SignUp = () => {
               variant="outlined"
               error={formik.touched.username && Boolean(formik.errors.username)}
               helpertext={formik.touched.username && formik.errors.username}
+              autoComplete="username"
             />
             <TextField
               id="email"
@@ -141,6 +144,7 @@ const SignUp = () => {
               variant="outlined"
               error={formik.touched.email && Boolean(formik.errors.email)}
               helpertext={formik.touched.email && formik.errors.email}
+              autoComplete="email"
             />
             <TextField
               id="password"
@@ -154,6 +158,7 @@ const SignUp = () => {
               variant="outlined"
               error={formik.touched.password && Boolean(formik.errors.password)}
               helpertext={formik.touched.password && formik.errors.password}
+              autoComplete="current-password"
               InputProps={{
                 endAdornment: (
                   <div

@@ -1,0 +1,26 @@
+.mini-card{
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+   
+}
+.avatar,.setting{
+    transition: 0.3s ease-in-out;
+}
+.setting{
+cursor:pointer;
+width:40px;
+height:40px;
+padding:4px;
+border-radius: 50%;
+}
+.avatar:hover,.setting:hover{
+box-shadow: 0px 0px 5px;
+}
+.setting:hover{
+    background-color: black;
+    color:white;
+}
+.css-1k2u9zb-MuiChartsAxis-root .MuiChartsAxis-line {
+    stroke: rgba(253, 248, 248, 0.87);
+    shape-rendering: crispEdges;
+    stroke-width: 1;
+}
