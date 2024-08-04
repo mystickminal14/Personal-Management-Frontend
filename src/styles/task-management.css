@@ -1,8 +1,9 @@
 .board-container {
-    background: linear-gradient(
+    background:url('./../assets/board-card.jpg');
+    /* background: linear-gradient(
         rgba(0, 51, 102, 0.6), 
         rgba(0, 102, 204, 0.6)  
-    ), url('./../assets/board-card.jpg');
+    ), url('./../assets/board-card.jpg'); */
     background-size: cover; 
     background-position: center;
 }

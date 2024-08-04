@@ -12,7 +12,7 @@ const SignIn = () => {
     username: "",
     password: "",
   });
-  const url = "/login";
+  const url = "/auth/login";
   const { isLoading, save } = useLogin(url, data);
 
   const handleChange = (e) => {
