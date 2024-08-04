@@ -27,7 +27,7 @@ export const useLogin = (url, body) => {
         showConfirmButton: true,
       }).then((result) => {
         if (result.isConfirmed) {
-          navigate('/dashboard');
+          navigate('/app/dashboard');
         }
       });
     } catch (error) {
