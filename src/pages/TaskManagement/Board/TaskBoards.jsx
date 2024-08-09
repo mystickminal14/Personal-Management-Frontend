@@ -2,10 +2,10 @@ import { useContext } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { LuListTodo } from "react-icons/lu";
 import { IoSettingsOutline } from "react-icons/io5";
-import { AppContext } from "./../../context/ContextApp";
+import { AppContext } from "../../../context/ContextApp";
 import "../.././styles/sub-menu.css";
-import BlockTitle from "../../components/task-components/BlockTitle";
-import TodoBlock from "./../../components/task-components/TodoBlock";
+import BlockTitle from "../../../components/task-components/BlockTitle";
+import TodoBlock from "../../../components/task-components/TodoBlock";
 export default function Board() {
   const { responsive } = useContext(AppContext);
   return (

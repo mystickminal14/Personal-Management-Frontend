@@ -44,9 +44,10 @@ export default function ContextApp({ children }) {
   const handleClose = () => {
     setIsLoading(false);
   };
+  const [openModel,setModel]=useState(false)
 
   return (
-    <AppContext.Provider value={{ responsive, isLoading, setIsLoading, showToast, setResponsive }}>
+    <AppContext.Provider value={{ responsive, isLoading, setIsLoading, showToast,openModel,setModel, setResponsive }}>
       <ToastContainer />
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}

@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import SignIn from "../pages/auth/SignIn";
-import TaskManagement from "./../pages/TaskManagement/TaskManagement";
+import TaskManagement from "../pages/TaskManagement/Board/TaskManagement";
 import SignUp from "../pages/auth/SignUp";
 import Home from "../pages/Home/Home";
 import Profile from "../pages/profile/Profile";

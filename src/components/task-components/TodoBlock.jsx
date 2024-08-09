@@ -11,8 +11,8 @@ export default function TodoBlock() {
   const [showMenu, setshow] = useState(false);
   return (
     <div
- draggable
-      style={{ background: "#1A1A1A",cursor:'grab' }}
+      draggable
+      style={{ background: "#1A1A1A", cursor: "grab" }}
       className="card flex flex-col gap-2 0 w-96 n p-4 "
     >
       <div className="flex relative justify-between">
@@ -21,9 +21,13 @@ export default function TodoBlock() {
           Minal.
         </h1>
         <button className=" hover:bg-slate-500 hover:rounded-full transition-all hover:text-black p-1">
-          <BsThreeDots onClick={()=>{setshow(!showMenu)}} />
+          <BsThreeDots
+            onClick={() => {
+              setshow(!showMenu);
+            }}
+          />
         </button>
-        {showMenu ? <TaskMenu onClick={()=>setshow(!showMenu)} /> : ""}
+        {showMenu ? <TaskMenu onClick={() => setshow(!showMenu)} /> : ""}
       </div>
       <span className="px-2"> 2024-01-44</span>
       <div className="px-2 flex items-center justify-between">
