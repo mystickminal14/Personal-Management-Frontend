@@ -6,13 +6,13 @@ import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/ContextApp';
 
 export const usePost = (url) => {
-  const {setIsloading}=useContext(AppContext)
+  const {setIsLoading}=useContext(AppContext)
   const [data, setData] = useState(null);
   const handleError = useHandleError();
  const [path,setPath]=useState()
  const navigate=useNavigate()
   const post = async (body) => {
-    setIsloading(true);
+    setIsLoading(true);
     try {
       const response = await axios.post(url, JSON.stringify(body), {
         headers: {
@@ -21,7 +21,7 @@ export const usePost = (url) => {
       });
       setData(response.data);
       const successMessage = response.data?.message || 'Request was successful!';
-      setIsloading(false)
+      setIsLoading(false)
       Swal.fire({
         position: 'center',
         icon: 'success',
@@ -34,10 +34,10 @@ export const usePost = (url) => {
         }
       })
     } catch (error) {
-      setIsloading(false)
+      setIsLoading(false)
       handleError(error);
     } finally {
-      setIsloading(false)
+      setIsLoading(false)
     }
   };
 

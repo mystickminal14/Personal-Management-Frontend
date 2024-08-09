@@ -39,7 +39,7 @@ export default function FormDialog() {
     status: "",
     background: "",
   });
-  const url = "taskManagement/boards/create";
+  const url = "/taskManagement/boards/create";
   const { post } = usePost(url);
   const handleSubmit = (values) => {
     setIsLoading(true);

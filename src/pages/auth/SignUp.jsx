@@ -30,7 +30,7 @@ const SignUp = () => {
     avatar: null,
   };
 
-  const { post,setPath } = usePost("/register");
+  const { post,setPath } = usePost("/auth/register");
   const handleSubmit = async (values) => {
     const formattedValues = {
       ...values,
