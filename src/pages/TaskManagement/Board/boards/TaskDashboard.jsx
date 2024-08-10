@@ -13,15 +13,16 @@ import { FaEdit } from "react-icons/fa";
 
 const TaskDashboard = () => {
   const url = "/task-management/boards/latest";
-  const { refresh } = useContext(AppContext);
-  const { data, refetch } = useGet(url);
+  const { refresh, setRefreshData, setIsLoading } = useContext(AppContext);
+  const { data, refetch } = useGet("/task-management/boards/latest");
 
+ 
   useEffect(() => {
     if (refresh) {
       refetch();
+      setRefreshData(false)
     }
-  }, [refresh]);
-
+  }, [refresh, refetch]);
   const [open, setOpen] = useState(false);
   const [currentId, setCurrentId] = useState(null);
   const [drawerMode, setDrawerMode] = useState(null); 
