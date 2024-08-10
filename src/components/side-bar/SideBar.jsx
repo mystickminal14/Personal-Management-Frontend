@@ -61,14 +61,14 @@ export default function SideBar() {
           />
         </NavLink>
         <div className="flex flex-col gap-2">
-          <NavLink to="/app/task-management">
+          <NavLink to="/app/task-management/board">
             <SideBarButtons
               show={show}
               icon={<LuLayoutDashboard />}
               onClick={() => handleSubMenu("task")}
               arrow={showMenu.task ? <IoIosArrowUp /> : <IoIosArrowDown />}
               btnTitle="Manage Task"
-              isActive={checkIsActive("/app/task-management")}
+              isActive={checkIsActive("/app/task-management/board")}
             />
           </NavLink>
           <div className={`open ${showMenu.task && show ? "click" : ""}`}>

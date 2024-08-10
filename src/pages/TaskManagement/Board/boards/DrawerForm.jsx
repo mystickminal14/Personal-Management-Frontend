@@ -87,7 +87,7 @@ const DrawerForm = ({ id, onClose }) => {
           const response = await axios.delete(url);
           if (response) {
             setRefreshData(prev => !prev);
-            navigate('/app/task-management');
+            navigate('/app/task-management/board');
           }
   
           Swal.fire({
@@ -127,7 +127,7 @@ const DrawerForm = ({ id, onClose }) => {
       }).then((result) => {
         if (result.isConfirmed) {
           setRefreshData(prev => !prev);
-          navigate('/app/task-management');
+          navigate('/app/task-management/board');
         }
         const swalContainer = document.querySelector('.swal2-container');
         if (swalContainer) {
@@ -162,7 +162,7 @@ const DrawerForm = ({ id, onClose }) => {
       }).then((result) => {
         if (result.isConfirmed) {
           setRefreshData(prev => !prev);
-          navigate('/app/task-management');
+          navigate('/app/task-management/board');
         }
         const swalContainer = document.querySelector('.swal2-container');
         if (swalContainer) {

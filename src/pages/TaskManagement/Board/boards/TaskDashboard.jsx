@@ -9,14 +9,15 @@ import { AppContext } from "../../../../context/ContextApp";
 import { IoTimerOutline } from "react-icons/io5";
 import { FaFlipboard } from "react-icons/fa6";
 import useGet from "../../../../hooks/useGet";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaOpencart } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const TaskDashboard = () => {
   const url = "/task-management/boards/latest";
   const { refresh, setRefreshData, setIsLoading } = useContext(AppContext);
   const { data, refetch } = useGet("/task-management/boards/latest");
 
- 
+ const navigate=useNavigate()
   useEffect(() => {
     if (refresh) {
       refetch();
@@ -72,8 +73,9 @@ const TaskDashboard = () => {
               />
               <div className="absolute inset-0 flex items-end justify-between uppercase p-2 bg-black bg-opacity-50 transition-opacity duration-300 group-hover:bg-opacity-70">
                 <h3 className="text-white text-lg font-semibold">{data?.data?.boardName}</h3>
-                <div className='p-1 rounded-lg flex justify-center items-center' style={{ background: 'black' }}>
+                <div className='p-1 rounded-lg flex gap-3 justify-center items-center' style={{ background: 'black' }}>
                   <FaEdit onClick={() => handleAdd(data?.data?._id)} className="text-white text-xl" />
+                  <FaOpencart onClick={()=>{navigate(`/app/task-management/board/${data?.data?._id}`)}} className="text-white text-xl" />
                 </div>
               </div>
             </div>
