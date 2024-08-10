@@ -3,7 +3,7 @@ import "../../styles/login.css";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -19,7 +19,7 @@ import { usePost } from "../../hooks/usePost";
 
 const SignUp = () => {
   const [show, setShow] = useState(false);
-
+const navigate=useNavigate()
   const data = {
     fullName: '',
     birthDate: dayjs(),
@@ -38,7 +38,7 @@ const SignUp = () => {
       avatar: values.avatar ? values.avatar : "",
     };
     await post(formattedValues);
-    setPath(`/`)
+    navigate(`/`)
   };
 
   const formik = useFormik({
@@ -181,7 +181,11 @@ const SignUp = () => {
                 id="avatar"
                 name="avatar"
                 type="file"
-                onChange={(e) => formik.setFieldValue("avatar", e.currentTarget.files[0])}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  console.log(e.target.files);   formik.setFieldValue("avatar", file);
+                 
+                }}
                 onBlur={formik.handleBlur}
                 className="mt-1 file:mr-3 w-full file:py-2 file:px-4 file:rounded-md file:border-0 text-sm border rounded-md file:bg-black file:text-white shadow-md hover:bg-gray-200"
               />

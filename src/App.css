@@ -8,6 +8,9 @@ body {
     background: linear-gradient(145deg, #101010, #131313);
     box-shadow: 25px 25px 50px #0c0c0c,
 }
+.swal2-container {
+    z-index: 9999 !important;
+  }
 .bg{
     height:100vh;
     background-color: #000000;

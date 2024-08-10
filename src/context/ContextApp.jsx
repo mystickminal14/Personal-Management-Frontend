@@ -20,6 +20,8 @@ const ToastOptions = {
 export default function ContextApp({ children }) {
   const [responsive, setResponsive] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [refresh, setRefreshData] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const showToast = (message, type = "default") => {
     switch (type) {
@@ -44,10 +46,10 @@ export default function ContextApp({ children }) {
   const handleClose = () => {
     setIsLoading(false);
   };
-  const [openModel,setModel]=useState(false)
+  const [openModel, setModel] = useState(false);
 
   return (
-    <AppContext.Provider value={{ responsive, isLoading, setIsLoading, showToast,openModel,setModel, setResponsive }}>
+    <AppContext.Provider value={{ responsive, isLoading, refresh, setRefreshData, setIsLoading, showToast, openModel, setModel, setResponsive }}>
       <ToastContainer />
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}

@@ -5,9 +5,11 @@ import { Avatar } from "@mui/material";
 import img from "./../../assets/logo.png";
 import { IoSettingsSharp } from "react-icons/io5";
 import TaskTabs from "./TaskTabs";
+import Navbar from "../../components/nav-bar/Navbar";
 const HomeCard = () => {
   return (
     <>
+    <Navbar/>
       <nav className="md:p-4 p-2 md:px-10  px-5 flex justify-between">
         <div>
         

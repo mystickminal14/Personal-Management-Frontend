@@ -3,11 +3,11 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { IoMdArrowBack, IoMdArrowForward } from "react-icons/io";
-import useGet from './../../../hooks/useGet';
+import useGet from '../../../../hooks/useGet';
 
-const SliderCard = () => {
-  const url = "/task-management/boards";
-  const { data, isLoading, error } = useGet(url);
+const Deleted = () => {
+  const url = "/task-management/boards/deleted";
+  const { data} = useGet(url);
 
   const CustomPrevArrow = ({ className, onClick }) => (
     <IoMdArrowBack
@@ -86,4 +86,4 @@ const SliderCard = () => {
   );
 };
 
-export default SliderCard;
+export default Deleted;

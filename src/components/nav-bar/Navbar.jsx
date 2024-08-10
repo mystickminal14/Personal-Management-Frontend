@@ -31,16 +31,16 @@ const Navbar = () => {
 
   return (
     <div
-      className="fixed w-full flex justify-between px-4 top-0 h-14 items-center text-white"
+      className=" w-full flex justify-between px-4 top-0 h-14 items-center text-white"
       style={{ background: "#1A1A1A", zIndex: "100000" }}
     >
       <div className="flex items-center gap-3">
         <div
-          className={` w-[140px] h-[80px] flex justify-center items-center text-xl p-1`}
+          className={` w-[140px] h-[70px] flex justify-center items-center text-xl p-1`}
         >
           <img
             src={logo}
-            className=" w-[140px] h-[80px]  object-cover"
+            className=" w-[140px] h-[70px]  object-cover"
             alt="profile-image"
           />
         </div>
