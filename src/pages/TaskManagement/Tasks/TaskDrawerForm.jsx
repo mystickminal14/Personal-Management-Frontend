@@ -7,13 +7,12 @@ import axios from "../../../utils/api-client";
 import taskSchema from "./task-formik.schema";
 import { AiFillCloseSquare } from "react-icons/ai";
 import Swal from "sweetalert2";
-import { AppContext } from "./../../../context/ContextApp";
+import { AppContext } from "../../../context/ContextApp";
 import useHandleError from "../../../hooks/useHandleError";
 
-const DrawerForm = ({ id, onClose, bId, mode }) => {
+const TaskDrawerForm = ({ id, onClose, bId }) => {
   const { setRefreshData, setIsLoading } = useContext(AppContext);
   const navigate = useNavigate();
-  const [statusList, setStatusList] = useState([]);
   const handleError = useHandleError();
 
   const formik = useFormik({
@@ -22,14 +21,13 @@ const DrawerForm = ({ id, onClose, bId, mode }) => {
       description: "",
       dueDate: "",
       priority: "",
-      istatus: "",
-      status: [],
+    
       boardId: bId || "",
-      background: null,
+      
     },
     validationSchema: taskSchema,
     onSubmit: (values) => {
-      mode === "edit" ? handleUpdate(values) : handleSubmit(values);
+     id? handleUpdate(values) : handleSubmit(values);
     },
   });
 
@@ -39,7 +37,6 @@ const DrawerForm = ({ id, onClose, bId, mode }) => {
       setIsLoading(false);
       return;
     }
-
     setIsLoading(true);
     try {
       const response = await axios.get(
@@ -134,6 +131,7 @@ const DrawerForm = ({ id, onClose, bId, mode }) => {
   };
 
   const handleSubmit = async (values) => {
+    console.log(values)
     setIsLoading(true);
     try {
       const response = await axios.post(
@@ -164,21 +162,10 @@ const DrawerForm = ({ id, onClose, bId, mode }) => {
     }
   };
 
-  const handleStatusChange = () => {
-    const newStatus = formik.values.istatus.trim();
-    if (newStatus) {
-      const newStatusList = [
-        ...statusList,
-        { id: Date.now(), status: newStatus },
-      ];
-      setStatusList(newStatusList);
-      formik.setFieldValue("status", newStatusList);
-      formik.setFieldValue("istatus", "");
-    }
-  };
+  
 
   return (
-    <div style={{ height: "100%" }} className="flex p-3 flex-col">
+    <div style={{ height: "100%" }} className="flex p-3 h-screen flex-col">
       <div className="flex w-full items-center justify-between">
         <h1 className="text-2xl">{id ? `Edit Board` : `Create Board`}</h1>
         <AiFillCloseSquare
@@ -254,48 +241,6 @@ const DrawerForm = ({ id, onClose, bId, mode }) => {
           helperText={formik.touched.description && formik.errors.description}
         />
 
-        <div className="flex">
-          <TextField
-            id="istatus"
-            name="istatus"
-            label="Status Input"
-            fullWidth
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.istatus}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                handleStatusChange();
-              }
-            }}
-          />
-
-          <Button
-            variant="contained"
-            onClick={handleStatusChange}
-            color="primary"
-            sx={{
-              "&:hover": {
-                background: "slategray",
-              },
-            }}
-          >
-            {" "}
-            Insert
-          </Button>
-        </div>
-
-        <div className="mt-2">
-          {statusList.map((status) => (
-            <div
-              key={status.id}
-              className="w-auto px-3 p-1 rounded-md bg-blue-500 text-white mb-1"
-            >
-              {status.status}
-            </div>
-          ))}
-        </div>
       </form>
       <Button
         type="submit"
@@ -333,4 +278,4 @@ const DrawerForm = ({ id, onClose, bId, mode }) => {
   );
 };
 
-export default DrawerForm;
+export default TaskDrawerForm;

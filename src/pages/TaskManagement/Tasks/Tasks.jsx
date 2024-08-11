@@ -8,7 +8,8 @@ import { useParams } from "react-router-dom";
 import axios from "../../../utils/api-client";
 import useHandleError from "../../../hooks/useHandleError";
 import { Drawer } from "@mui/material";
-import DrawerForm from "./DrawerForm";
+import DrawerForm from "./TaskDrawerForm";
+import TaskStatus from "./TaskStatus";
 
 export default function Tasks() {
   const { setIsLoading } = useContext(AppContext);
@@ -34,7 +35,7 @@ export default function Tasks() {
 
   const handleAdd = () => {
     setCurrentId(null);
-    setDrawerMode('create');
+    setDrawerMode("create");
     setOpen(true);
   };
 
@@ -50,25 +51,34 @@ export default function Tasks() {
 
   return (
     <div
+      className="h-screen"
       style={{
-        backgroundImage: data ? `url(${data.background})` : 'none',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed',
-        backgroundSize: 'cover',
+        backgroundImage: data ? `url(${data.background})` : "none",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+        backgroundSize: "cover",
       }}
     >
-      <Drawer anchor="right" PaperProps={{
-    sx: {
-      width: {
-     
-        sm: '300px', 
-        md: '420px', 
-      },
- 
-    }
-  }} open={open} onClose={handleCloseDrawer}>
-        <DrawerForm id={currentId} bId={id} mode={drawerMode} onClose={handleCloseDrawer} />
+      <Drawer
+        anchor="right"
+        PaperProps={{
+          sx: {
+            width: {
+              sm: "300px",
+              md: "420px",
+            },
+          },
+        }}
+        open={open}
+        onClose={handleCloseDrawer}
+      >
+        <DrawerForm
+          id={currentId}
+          bId={id}
+          mode={drawerMode}
+          onClose={handleCloseDrawer}
+        />
       </Drawer>
       {data ? (
         <div>
@@ -84,7 +94,8 @@ export default function Tasks() {
               </h1>
             </div>
             <h1 className="hidden sm:block text-white">
-              <span className="font-semibold">Board Timeframe:</span> {data.startDate} - {data.endDate}
+              <span className="font-semibold">Board Timeframe:</span>{" "}
+              {data.startDate} - {data.endDate}
             </h1>
           </div>
 
@@ -105,48 +116,14 @@ export default function Tasks() {
             </div>
           </div>
           <div style={{ marginTop: "-20px" }} className="p-4 flex gap-3">
-            <button className="rounded-sm p-1 px-3 hover:bg-slate-800 bg-slate-600 shadow-slate-100">
+            <button className="rounded-sm p-1 px-3 hover:bg-slate-800 bg-black bg-opacity-50 text-white shadow-slate-100">
               Board
             </button>
-            <button className="rounded-sm p-1 px-3 hover:bg-slate-800 bg-slate-600 shadow-slate-100">
+            <button className="rounded-sm p-1 px-3 hover:bg-slate-800 bg-black bg-opacity-50 text-white shadow-slate-100">
               List
             </button>
           </div>
-          <div className="flex h-full overflow-x-auto scroll-smooth no-scrollbar gap-5 p-4">
-            {/*  <div className="card flex flex-col gap-3">
-          <BlockTitle title="Todo" />
-          <TodoBlock />
-        </div>
-        <div className="card flex flex-col gap-3">
-          <BlockTitle title="Todo" />
-          <div className='flex flex-col gap-3'>
-            <TodoBlock />
-            <TodoBlock />
-            <TodoBlock />
-            <TodoBlock />
-            <TodoBlock />
-            <TodoBlock />
-          </div>
-        </div>
-        <div className="card flex flex-col gap-3">
-          <BlockTitle title="Todo" />
-          <TodoBlock />
-          <TodoBlock />
-
-          <TodoBlock />
-        </div>
-        <div className="card flex flex-col gap-3">
-          <BlockTitle title="Todo" />
-          <TodoBlock />
-        </div>
-
-        <div className="card flex flex-col gap-3">
-          <BlockTitle title="Todo" />
-          <TodoBlock />
-          <TodoBlock />
-          <TodoBlock />
-        </div> */}
-          </div>
+          <TaskStatus />
         </div>
       ) : (
         <p className="text-white">Loading...</p>

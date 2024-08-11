@@ -11,20 +11,21 @@ import dayjs from "dayjs";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../../../context/ContextApp";
-import { usePost } from "../../../../hooks/usePost";
-import boardSchema from "./board-formik.schema";
+import { boardStoreSchema,boardUpdateSchema } from "./board-formik.schema";
 import { AiFillCloseSquare } from "react-icons/ai";
 import axios from "../../../../utils/api-client";
 import useHandleError from "../../../../hooks/useHandleError";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
+import { MdDeleteForever } from "react-icons/md";
 
 const DrawerForm = ({ id, onClose }) => {
   const { setRefreshData, setIsLoading, refresh } = useContext(AppContext);
   const navigate = useNavigate();
   const [show, setShow] = useState("");
   const url = "/task-management/boards/create";
-  const { data, post } = usePost(url);
   const handleError = useHandleError();
+
+  const [statusList, setStatusList] = useState(["Todo", "Doing", "Completed"]);
 
   const formik = useFormik({
     initialValues: {
@@ -32,10 +33,12 @@ const DrawerForm = ({ id, onClose }) => {
       description: "",
       startDate: dayjs().format("YYYY-MM-DD"),
       endDate: "",
+      istatus: "",
+      taskStatus: ["Todo", "Doing", "Completed"],
       status: "",
       background: null,
     },
-    validationSchema: boardSchema,
+    validationSchema: id?boardUpdateSchema:boardStoreSchema,
     onSubmit: (values) => {
       id ? handleUpdate(values) : handleSubmit(values);
     },
@@ -80,25 +83,24 @@ const DrawerForm = ({ id, onClose }) => {
           cancelButtonColor: "#d33",
           confirmButtonText: "Yes, delete it!",
         });
-  
-     
+
         if (result.isConfirmed) {
           setIsLoading(true);
           const response = await axios.delete(url);
           if (response) {
-            setRefreshData(prev => !prev);
-            navigate('/app/task-management/board');
+            setRefreshData((prev) => !prev);
+            navigate("/app/task-management/board");
           }
-  
+
           Swal.fire({
             title: "Deleted!",
-            text: response.data?.message || "The board was deleted successfully.",
+            text:
+              response.data?.message || "The board was deleted successfully.",
             icon: "success",
           }).then(() => {
-        
-            const swalContainer = document.querySelector('.swal2-container');
+            const swalContainer = document.querySelector(".swal2-container");
             if (swalContainer) {
-              swalContainer.style.zIndex = '9999';
+              swalContainer.style.zIndex = "9999";
             }
           });
         }
@@ -109,7 +111,10 @@ const DrawerForm = ({ id, onClose }) => {
       }
     }
   };
-  
+const handleDeleteStatus=(value)=>{
+const newData=statusList.filter((data,key)=>key!==value)
+setStatusList(newData)
+}
   const handleUpdate = async (values) => {
     setIsLoading(true);
     try {
@@ -126,12 +131,12 @@ const DrawerForm = ({ id, onClose }) => {
         showConfirmButton: true,
       }).then((result) => {
         if (result.isConfirmed) {
-          setRefreshData(prev => !prev);
-          navigate('/app/task-management/board');
+          setRefreshData((prev) => !prev);
+          navigate("/app/task-management/board");
         }
-        const swalContainer = document.querySelector('.swal2-container');
+        const swalContainer = document.querySelector(".swal2-container");
         if (swalContainer) {
-          swalContainer.style.zIndex = '9999';
+          swalContainer.style.zIndex = "9999";
         }
       });
     } catch (error) {
@@ -149,7 +154,7 @@ const DrawerForm = ({ id, onClose }) => {
         values,
         {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -161,12 +166,12 @@ const DrawerForm = ({ id, onClose }) => {
         showConfirmButton: true,
       }).then((result) => {
         if (result.isConfirmed) {
-          setRefreshData(prev => !prev);
-          navigate('/app/task-management/board');
+          setRefreshData((prev) => !prev);
+          navigate("/app/task-management/board");
         }
-        const swalContainer = document.querySelector('.swal2-container');
+        const swalContainer = document.querySelector(".swal2-container");
         if (swalContainer) {
-          swalContainer.style.zIndex = '9999';
+          swalContainer.style.zIndex = "9999";
         }
       });
     } catch (error) {
@@ -175,17 +180,29 @@ const DrawerForm = ({ id, onClose }) => {
       setIsLoading(false);
     }
   };
-  
+  const handleStatusChange = () => {
+    const newStatus = formik.values.istatus.trim();
+    if (newStatus && !statusList.includes(newStatus)) {
+      const newStatusList = [...statusList, newStatus];
+      setStatusList(newStatusList);
+      formik.setFieldValue("taskStatus", newStatusList);
+      formik.setFieldValue("istatus", "");
+    }
+  };
 
+  console.log(formik.values)
   const dateInputStyles = {
     "& input[type='date']": { color: "black" },
   };
-
+console.log(formik.values)
   return (
     <div style={{ height: "100%" }} className="flex p-3 flex-col">
       <div className="flex w-full items-center justify-between">
         <h1 className="text-2xl">{id ? `Edit Board` : `Create Board`}</h1>
-        <AiFillCloseSquare onClick={onClose} className="text-3xl cursor-pointer" />
+        <AiFillCloseSquare
+          onClick={onClose}
+          className="text-3xl cursor-pointer"
+        />
       </div>
       <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
       <form
@@ -274,7 +291,57 @@ const DrawerForm = ({ id, onClose }) => {
             </div>
           )}
         </FormControl>
+  
+     {!id && <>   <FormControl fullWidth>
+          <InputLabel id="task-status-label">Task Status</InputLabel>
+          <Select
+            id="taskStatus"
+            name="taskStatus"
+            multiple
+            value={formik.values.taskStatus}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            sx={dateInputStyles}
+          >
+            {statusList.map((status, index) => (
+              <MenuItem key={index} value={status}>
+                {status}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
+        <div className="flex gap-2 items-center">
+          <TextField
+            id="istatus"
+            name="istatus"
+            label="Add New Status"
+            fullWidth
+            value={formik.values.istatus}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            sx={dateInputStyles}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleStatusChange}
+            sx={{ height: "56px" }}
+          >
+            Insert
+          </Button>
+        </div>
+
+        {statusList.map((status, index) => (
+          <div key={index} className="flex bg-blue-600 text-white p-2 rounded-md justify-between items-center">
+            <span>{status}</span>
+            <MdDeleteForever
+              onClick={() => handleDeleteStatus(index)}
+              className="cursor-pointer text-2xl"
+            />
+          </div>
+        ))}
+</>}
         <TextField
           id="description"
           name="description"
@@ -334,14 +401,16 @@ const DrawerForm = ({ id, onClose }) => {
       >
         {id ? "Update" : "Submit"}
       </Button>
-  {id&&    <Button
-        onClick={handleDelete}
-        variant="contained"
-        color="error"
-        sx={{ mt: 2 }}
-      >
-        Delete
-      </Button>}
+      {id && (
+        <Button
+          onClick={handleDelete}
+          variant="contained"
+          color="error"
+          sx={{ mt: 2 }}
+        >
+          Delete
+        </Button>
+      )}
       <Button
         onClick={onClose}
         variant="contained"
