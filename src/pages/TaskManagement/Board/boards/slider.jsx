@@ -1,4 +1,4 @@
-import React, {  useContext } from "react";
+import React, { useContext } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -7,12 +7,13 @@ import useGet from '../../../../hooks/useGet';
 import CustomSkeleton from './../../../../components/Skeleton';
 import { FaEdit } from "react-icons/fa";
 import { AppContext } from "../../../../context/ContextApp";
+import { useNavigate } from "react-router-dom";
 
 const SliderCard = ({ handleAdd }) => {
   const url = "/task-management/boards";
   const { data } = useGet(url);
-  const {isLoading}=useContext(AppContext)
-
+  const { isLoading } = useContext(AppContext);
+const navigate=useNavigate()
   const CustomPrevArrow = ({ className, onClick }) => (
     <IoMdArrowBack
       onClick={onClick}
@@ -67,6 +68,12 @@ const SliderCard = ({ handleAdd }) => {
   };
 
   const Skeletons = [1, 2, 3, 4, 5, 6, 7];
+ 
+
+  const handleEditClick = (e, id) => {
+    e.stopPropagation(); 
+    handleAdd(id);
+  };
 
   return (
     <div className="slider-container p-3">
@@ -82,6 +89,7 @@ const SliderCard = ({ handleAdd }) => {
             <div
               key={item._id}
               className="relative h-40 cursor-pointer w-44 group rounded-lg overflow-hidden shadow-lg"
+              onClick={()=>navigate(`/app/task-management/board/${item._id}`)}
             >
               <img
                 src={item.background}
@@ -90,8 +98,13 @@ const SliderCard = ({ handleAdd }) => {
               />
               <div className="absolute inset-0 flex items-end justify-between uppercase p-2 bg-black bg-opacity-50 transition-opacity duration-300 group-hover:bg-opacity-70">
                 <h3 className="text-white text-lg font-semibold">{item.boardName}</h3>
-                <div className='p-1 rounded-lg flex justify-center items-center' style={{ background: 'black' }}>
-                  <FaEdit onClick={() => handleAdd(item._id)} className="text-white text-xl" />
+                <div
+                  className='p-1 rounded-lg flex justify-center items-center'
+                  style={{ background: 'black',color:'white' }}
+                >
+                  <FaEdit
+                    onClick={(e) => handleEditClick(e, item._id)} 
+                  />
                 </div>
               </div>
             </div>

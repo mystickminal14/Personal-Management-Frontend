@@ -17,20 +17,24 @@ const TaskDashboard = () => {
   const { refresh, setRefreshData, setIsLoading } = useContext(AppContext);
   const { data, refetch } = useGet("/task-management/boards/latest");
 
- const navigate=useNavigate()
+  const navigate = useNavigate();
+  
   useEffect(() => {
     if (refresh) {
       refetch();
-      setRefreshData(false)
+      setRefreshData(false);
     }
   }, [refresh, refetch]);
+
   const [open, setOpen] = useState(false);
   const [currentId, setCurrentId] = useState(null);
-  const [drawerMode, setDrawerMode] = useState(null); 
+  const [drawerMode, setDrawerMode] = useState(null);
+
   const handleAdd = (value) => {
     setCurrentId(value || null);
     setOpen(true);
-    setDrawerMode(value ? 'edit' : 'create'); 
+    setDrawerMode(value ? 'edit' : 'create');
+
   };
 
   const handleCloseDrawer = useCallback(() => {
@@ -38,6 +42,15 @@ const TaskDashboard = () => {
     setDrawerMode(null);
     setCurrentId(null);
   }, []);
+
+  const handleDivClick = () => {
+    navigate(`/app/task-management/board/${data?.data?._id}`);
+  };
+
+  const handleEditClick = (e) => {
+    e.stopPropagation(); 
+    handleAdd(data?.data?._id);
+  };
 
   return (
     <>
@@ -57,7 +70,7 @@ const TaskDashboard = () => {
                 textTransform: "capitalize",
                 fontWeight: "semibold",
               }}
-              onClick={() => handleAdd('')} // Fixed the onClick handler
+              onClick={() => handleAdd('')}
               className="hover:bg-slate-500 w-[100%] sm:w-auto font-semibold"
               endIcon={<IoMdAdd />}
             >
@@ -65,7 +78,7 @@ const TaskDashboard = () => {
             </Button>
           </div>
           {data?.data ? (
-            <div className="relative h-40 cursor-pointer w-72 group rounded-lg overflow-hidden shadow-lg">
+            <div onClick={handleDivClick} className="relative h-40 cursor-pointer w-72 group rounded-lg overflow-hidden shadow-lg">
               <img
                 src={data?.data?.background}
                 className="object-cover w-full h-full transition-opacity duration-300 group-hover:opacity-70"
@@ -74,8 +87,8 @@ const TaskDashboard = () => {
               <div className="absolute inset-0 flex items-end justify-between uppercase p-2 bg-black bg-opacity-50 transition-opacity duration-300 group-hover:bg-opacity-70">
                 <h3 className="text-white text-lg font-semibold">{data?.data?.boardName}</h3>
                 <div className='p-1 rounded-lg flex gap-3 justify-center items-center' style={{ background: 'black' }}>
-                  <FaEdit onClick={() => handleAdd(data?.data?._id)} className="text-white text-xl" />
-                  <FaOpencart onClick={()=>{navigate(`/app/task-management/board/${data?.data?._id}`)}} className="text-white text-xl" />
+                  <FaEdit onClick={handleEditClick} className=" text-white text-xl" />
+                  {/* <FaOpencart className="text-white text-xl" /> */}
                 </div>
               </div>
             </div>
@@ -93,7 +106,7 @@ const TaskDashboard = () => {
         </div>
         <div className="flex justify-center sm:justify-start flex-col gap-6">
           <h1 className="flex text-xl sm:text-md items-center gap-2 font-semibold">
-            <IoTimerOutline className="text-3xl font-bold" /> Recently Deleted
+            <IoTimerOutline className="text-3xl font-bold" /> Recently Closed
           </h1>
           <div className="px-4">
             <Deleted />

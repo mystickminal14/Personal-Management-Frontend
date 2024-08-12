@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, MenuItem } from "@mui/material";
 import dayjs from "dayjs";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
@@ -9,8 +9,10 @@ import { AiFillCloseSquare } from "react-icons/ai";
 import Swal from "sweetalert2";
 import { AppContext } from "../../../context/ContextApp";
 import useHandleError from "../../../hooks/useHandleError";
+import useGet from "../../../hooks/useGet";
+import { FormControl, InputLabel, Select } from "@mui/material";
 
-const TaskDrawerForm = ({ id, onClose, bId }) => {
+const TaskDrawerForm = ({ id,taskId, onClose,dynamic, bId }) => {
   const { setRefreshData, setIsLoading } = useContext(AppContext);
   const navigate = useNavigate();
   const handleError = useHandleError();
@@ -21,18 +23,18 @@ const TaskDrawerForm = ({ id, onClose, bId }) => {
       description: "",
       dueDate: "",
       priority: "",
-    
+      status: dynamic || "",
       boardId: bId || "",
-      
     },
     validationSchema: taskSchema,
     onSubmit: (values) => {
-     id? handleUpdate(values) : handleSubmit(values);
+      taskId ? handleUpdate(values) : handleSubmit(values);
     },
   });
 
+
   const setInitialData = async (id) => {
-    if (!id) {
+    if (!taskId) {
       formik.resetForm();
       setIsLoading(false);
       return;
@@ -40,14 +42,15 @@ const TaskDrawerForm = ({ id, onClose, bId }) => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `/task-management/boards/tasks/view/${id}`
+        `/task-management/boards/tasks/view/${taskId}`
       );
-      const data = response.data.data[0];
+      console.log(response)
+      const data = response.data.data;
       formik.setValues({
         ...data,
         dueDate: dayjs(data.dueDate).format("YYYY-MM-DD"),
       });
-      setStatusList(data.status || []);
+ 
     } catch (error) {
       handleError(error);
     } finally {
@@ -56,12 +59,13 @@ const TaskDrawerForm = ({ id, onClose, bId }) => {
   };
 
   useEffect(() => {
-    setInitialData(id);
-  }, [id]);
+    setInitialData(taskId);
+ 
+  }, [taskId]);
 
   const handleDelete = async () => {
-    const url = `/task-management/boards/tasks/delete/${id}`;
-    if (id) {
+    const url = `/task-management/boards/tasks/delete/${taskId}`;
+    if (taskId) {
       try {
         const result = await Swal.fire({
           title: "Are you sure?",
@@ -103,7 +107,7 @@ const TaskDrawerForm = ({ id, onClose, bId }) => {
     setIsLoading(true);
     try {
       const response = await axios.put(
-        `/task-management/boards/tasks/edit/${id}`,
+        `/task-management/boards/tasks/edit/${taskId}`,
         values,
         { headers: { "Content-Type": "application/json" } }
       );
@@ -129,9 +133,9 @@ const TaskDrawerForm = ({ id, onClose, bId }) => {
       setIsLoading(false);
     }
   };
-
+  const { data } = useGet(`/task-management/boards/${bId}`);
   const handleSubmit = async (values) => {
-    console.log(values)
+    
     setIsLoading(true);
     try {
       const response = await axios.post(
@@ -162,12 +166,14 @@ const TaskDrawerForm = ({ id, onClose, bId }) => {
     }
   };
 
-  
+  const dateInputStyles = {
+    "& input[type='date']": { color: "black" },
+  };
 
   return (
     <div style={{ height: "100%" }} className="flex p-3 h-screen flex-col">
       <div className="flex w-full items-center justify-between">
-        <h1 className="text-2xl">{id ? `Edit Board` : `Create Board`}</h1>
+        <h1 className="text-2xl">{id ? `Edit Task` : `Add Task`}</h1>
         <AiFillCloseSquare
           onClick={onClose}
           className="text-3xl cursor-pointer"
@@ -210,20 +216,70 @@ const TaskDrawerForm = ({ id, onClose, bId }) => {
             </div>
           )}
         </div>
+        <FormControl required className="w-full">
+          <InputLabel id="status-label">Task Status</InputLabel>
 
-        <TextField
-          id="priority"
-          name="priority"
-          label="Priority"
-          fullWidth
-          required
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.priority}
-          error={formik.touched.priority && Boolean(formik.errors.priority)}
-          helperText={formik.touched.priority && formik.errors.priority}
-        />
+          <Select
+            labelId="status-label"
+            id="status"
+            name="status"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.status}
+            label="Status"
+            error={formik.touched.status && Boolean(formik.errors.status)}
+            autoComplete="status"
+          >
+            <MenuItem value="">
+              <em>Select status</em>   </MenuItem>
+              {data?.data[0].taskStatus.map((status) => (
+                <MenuItem key={status._id} value={status.status}>
+                  {status.status}
+                </MenuItem>
+              ))}
+         
+          </Select>
+          {formik.touched.gender && formik.errors.gender ? (
+            <div className="text-red-500 text-sm mt-1">
+              {formik.errors.gender}
+            </div>
+          ) : null}
+        </FormControl>
+        <FormControl required className="w-full">
+          <InputLabel id="status-label">Select Priority</InputLabel>
 
+          <Select
+            labelId="status-label"
+            id="priority"
+            name="priority"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.priority}
+            label="Priority"
+            error={formik.touched.priority && Boolean(formik.errors.priority)}
+            autoComplete="priority"
+          >
+            <MenuItem value="">
+              <em>Select Priority</em>   </MenuItem>
+              
+                <MenuItem  value="High">
+                  High
+                </MenuItem>
+                <MenuItem  value="Medium">
+                  Medium
+                </MenuItem>
+                <MenuItem  value="Low">
+                  Low
+                </MenuItem>
+            
+         
+          </Select>
+          {formik.touched.gender && formik.errors.gender ? (
+            <div className="text-red-500 text-sm mt-1">
+              {formik.errors.gender}
+            </div>
+          ) : null}
+        </FormControl>
         <TextField
           id="description"
           name="description"
@@ -240,7 +296,6 @@ const TaskDrawerForm = ({ id, onClose, bId }) => {
           }
           helperText={formik.touched.description && formik.errors.description}
         />
-
       </form>
       <Button
         type="submit"
@@ -254,9 +309,9 @@ const TaskDrawerForm = ({ id, onClose, bId }) => {
           },
         }}
       >
-        {id ? "Update" : "Submit"}
+        {taskId ? "Update" : "Submit"}
       </Button>
-      {id && (
+      {taskId && (
         <Button
           onClick={handleDelete}
           variant="contained"

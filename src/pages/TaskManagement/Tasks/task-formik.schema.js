@@ -5,7 +5,7 @@ const taskSchema = Yup.object({
   dueDate: Yup.string().required(" Due Date is required"),
   description: Yup.string().required("Description is required!!!"),
   priority: Yup.string().required("Priority is required!!!"),
-  status: Yup.array().required("Status is required!!!"),
+  status: Yup.string().required("Status is required!!!"),
   
 });
 

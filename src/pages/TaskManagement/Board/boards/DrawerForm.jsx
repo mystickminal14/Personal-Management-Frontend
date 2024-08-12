@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import {
   TextField,
   Button,
@@ -11,7 +11,7 @@ import dayjs from "dayjs";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../../../context/ContextApp";
-import { boardStoreSchema,boardUpdateSchema } from "./board-formik.schema";
+import { boardStoreSchema, boardUpdateSchema } from "./board-formik.schema";
 import { AiFillCloseSquare } from "react-icons/ai";
 import axios from "../../../../utils/api-client";
 import useHandleError from "../../../../hooks/useHandleError";
@@ -38,7 +38,7 @@ const DrawerForm = ({ id, onClose }) => {
       status: "",
       background: null,
     },
-    validationSchema: id?boardUpdateSchema:boardStoreSchema,
+    validationSchema: id ? boardUpdateSchema : boardStoreSchema,
     onSubmit: (values) => {
       id ? handleUpdate(values) : handleSubmit(values);
     },
@@ -111,10 +111,10 @@ const DrawerForm = ({ id, onClose }) => {
       }
     }
   };
-const handleDeleteStatus=(value)=>{
-const newData=statusList.filter((data,key)=>key!==value)
-setStatusList(newData)
-}
+  const handleDeleteStatus = (value) => {
+    const newData = statusList.filter((data, key) => key !== value);
+    setStatusList(newData);
+  };
   const handleUpdate = async (values) => {
     setIsLoading(true);
     try {
@@ -179,7 +179,7 @@ setStatusList(newData)
     } finally {
       setIsLoading(false);
     }
-  };
+  }
   const handleStatusChange = () => {
     const newStatus = formik.values.istatus.trim();
     if (newStatus && !statusList.includes(newStatus)) {
@@ -190,11 +190,10 @@ setStatusList(newData)
     }
   };
 
-  console.log(formik.values)
   const dateInputStyles = {
     "& input[type='date']": { color: "black" },
   };
-console.log(formik.values)
+
   return (
     <div style={{ height: "100%" }} className="flex p-3 flex-col">
       <div className="flex w-full items-center justify-between">
@@ -291,57 +290,62 @@ console.log(formik.values)
             </div>
           )}
         </FormControl>
-  
-     {!id && <>   <FormControl fullWidth>
-          <InputLabel id="task-status-label">Task Status</InputLabel>
-          <Select
-            id="taskStatus"
-            name="taskStatus"
-            multiple
-            value={formik.values.taskStatus}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            sx={dateInputStyles}
-          >
+
+        {!id && (
+          <>
+            {" "}
+            <FormControl fullWidth>
+              <InputLabel id="task-status-label">Task Status</InputLabel>
+              <Select
+                id="taskStatus"
+                name="taskStatus"
+                multiple
+                value={formik.values.taskStatus}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                sx={dateInputStyles}
+              >
+                {statusList.map((status, index) => (
+                  <MenuItem key={index} value={status}>
+                    {status}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <div className="flex gap-2 items-center">
+              <TextField
+                id="istatus"
+                name="istatus"
+                label="Add New Status"
+                fullWidth
+                value={formik.values.istatus}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                sx={dateInputStyles}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleStatusChange}
+                sx={{ height: "56px" }}
+              >
+                Insert
+              </Button>
+            </div>
             {statusList.map((status, index) => (
-              <MenuItem key={index} value={status}>
-                {status}
-              </MenuItem>
+              <div
+                key={index}
+                className="flex bg-blue-600 text-white p-2 rounded-md justify-between items-center"
+              >
+                <span>{status}</span>
+                <MdDeleteForever
+                  onClick={() => handleDeleteStatus(index)}
+                  className="cursor-pointer text-2xl"
+                />
+              </div>
             ))}
-          </Select>
-        </FormControl>
-
-        <div className="flex gap-2 items-center">
-          <TextField
-            id="istatus"
-            name="istatus"
-            label="Add New Status"
-            fullWidth
-            value={formik.values.istatus}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            sx={dateInputStyles}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleStatusChange}
-            sx={{ height: "56px" }}
-          >
-            Insert
-          </Button>
-        </div>
-
-        {statusList.map((status, index) => (
-          <div key={index} className="flex bg-blue-600 text-white p-2 rounded-md justify-between items-center">
-            <span>{status}</span>
-            <MdDeleteForever
-              onClick={() => handleDeleteStatus(index)}
-              className="cursor-pointer text-2xl"
-            />
-          </div>
-        ))}
-</>}
+          </>
+        )}
         <TextField
           id="description"
           name="description"
@@ -360,32 +364,37 @@ console.log(formik.values)
           helperText={formik.touched.description && formik.errors.description}
         />
 
-        <div className="w-full mt-4">
-          <label className="ml-1 text-gray-900" htmlFor="background">
-            Board Image
-          </label>
-          <input
-            id="background"
-            name="background"
-            type="file"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              formik.setFieldValue("background", file);
-              setShow(file ? URL.createObjectURL(file) : "");
-            }}
-            onBlur={formik.handleBlur}
-            className="mt-1 file:mr-3 w-full file:py-2 file:px-4 file:rounded-md file:border-0 text-sm border rounded-md file:bg-black file:text-white shadow-md hover:bg-gray-200"
-          />
-          {show && (
-            <div className="w-[320px] h-[220px] mt-4">
-              <img
-                src={show}
-                className="w-[320px] h-[220px] object-cover"
-                alt="Selected Background Image"
+        {!id && (
+          <>
+            <div className="w-full mt-4">
+              <label className="ml-1 text-gray-900" htmlFor="background">
+                Board Image
+              </label>
+              <input
+                id="background"
+                name="background"
+                type="file"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  console.log(e.target.files[0]);
+                  formik.setFieldValue("background", file);
+                  setShow(file ? URL.createObjectURL(file) : "");
+                }}
+                onBlur={formik.handleBlur}
+                className="mt-1 file:mr-3 w-full file:py-2 file:px-4 file:rounded-md file:border-0 text-sm border rounded-md file:bg-black file:text-white shadow-md hover:bg-gray-200"
               />
+              {show && (
+                <div className="w-[320px] h-[220px] mt-4">
+                  <img
+                    src={show}
+                    className="w-[320px] h-[220px] object-cover"
+                    alt="Selected Background Image"
+                  />
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </>
+        )}
       </form>
       <Button
         type="submit"
